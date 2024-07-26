@@ -16,7 +16,19 @@ type Storage struct {
 	basePath string
 }
 
-const defaultPerm = 0774
+//func (s Storage) IsExist(p *storage.Page) (bool, error) {
+//	fileName, err := fileName(p)
+//	if err != nil {
+//		return false, err2.Wrap("can't remove file", err)
+//
+//		path := filepath.Join(s.basePath, p.Username, fileName)
+//
+//		os.Stat(path)
+//		os.ErrNotExist = err
+//	}
+//}
+
+const defaultPerm = 0775
 
 func New(basePath string) Storage {
 	return Storage{basePath: basePath}
@@ -91,7 +103,7 @@ func (s Storage) Remove(p *storage.Page) (err error) {
 	return nil
 }
 
-func (s Storage) IsExists(p *storage.Page) (bool, error) {
+func (s Storage) IsExist(p *storage.Page) (bool, error) {
 	fileName, err := fileName(p)
 	if err != nil {
 		return false, err2.Wrap("can't check if file exists", err)

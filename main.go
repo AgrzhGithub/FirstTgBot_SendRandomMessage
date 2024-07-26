@@ -1,17 +1,37 @@
-package TelegramBot
+package main
 
 import (
-	"TelegramBot/Clients/Telegram"
+	TgClient "TelegramBot/clients/Telegram"
+	event_consumer "TelegramBot/consumer/event-consumer"
+	"TelegramBot/events/Telegram"
+	"TelegramBot/storage/files"
 	"flag"
 	"log"
 )
 
 const (
-	tgBotHost = "https://api.telegram.org"
+	tgBotHost   = "api.telegram.org"
+	storagePath = "files_storage"
+	batchSize   = 100
 )
 
+func main() {
+	eventsProcessor := Telegram.New(
+		TgClient.New(tgBotHost, mustToken()),
+		files.New(storagePath),
+	)
+
+	log.Print("service started")
+
+	consumer := event_consumer.New(eventsProcessor, eventsProcessor, batchSize)
+	if err := consumer.Start(); err != nil {
+		log.Fatal("service is stoped", err)
+	}
+}
+
 func mustToken() string {
-	token := flag.String("token-bot",
+	token := flag.String(
+		"tg-bot-token",
 		"",
 		"telegram bot token")
 
@@ -21,9 +41,4 @@ func mustToken() string {
 		log.Fatal("token is empty")
 	}
 	return *token
-}
-
-func main() {
-	tgClient := Telegram.New(mustToken(tgBotHost))
-
 }

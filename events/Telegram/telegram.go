@@ -1,7 +1,7 @@
 package Telegram
 
 import (
-	"TelegramBot/Clients/Telegram"
+	"TelegramBot/clients/Telegram"
 	"TelegramBot/events"
 	err2 "TelegramBot/lib/err"
 	"TelegramBot/storage"
